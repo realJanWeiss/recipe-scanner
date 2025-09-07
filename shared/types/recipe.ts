@@ -9,7 +9,7 @@ export interface Recipe {
 }
 
 export interface ScannedRecipe {
-  id: number;
+  id: string;
   imageFileName: string;
   data?: Recipe;
 }

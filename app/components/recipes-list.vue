@@ -10,12 +10,10 @@
           <nuxt-link :to="{ name: 'recipe-id', params: { id: scannedRecipe.id } }">
             <h3>{{ scannedRecipe.data?.name ?? 'Unprocessed recipe' }}</h3>
           </nuxt-link>
-          <button
+          <process-recipe-button
             v-if="!scannedRecipe.data"
-            @click="$recipesStore.processImage(scannedRecipe)"
-          >
-            process
-          </button>
+            :scanned-recipe="scannedRecipe"
+          />
           <button @click="$recipesStore.deleteRecipe(scannedRecipe.id)">
             delete
           </button>

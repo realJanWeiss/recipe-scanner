@@ -4,6 +4,9 @@ export default defineNuxtPlugin({
   name: 'recipes-store',
   async setup() {
     const recipesDB = await useRecipesDB();
+
+    const pendingProcessings = reactive<Map<string, Promise<ScannedRecipe>>>(new Map());
+
     const uploadImage = async (files: File[]): Promise<void> => {
       const formData = new FormData();
       for (const file of files) {
@@ -14,21 +17,34 @@ export default defineNuxtPlugin({
         body: formData,
       });
       for (const savedFile of savedFiles) {
-        recipesDB.addRecipe({ imageFileName: savedFile });
+        recipesDB.addRecipe({ id: savedFile.recipeId, imageFileName: savedFile.fileName });
       }
     };
-    const processImage = async (scannedRecipes: ScannedRecipe) => {
-      const processedImage = await $fetch('/api/recipes/process', {
+    const processImage = async (scannedRecipe: ScannedRecipe): Promise<ScannedRecipe> => {
+      const foundPendingProcessing = pendingProcessings.get(scannedRecipe.id);
+      if (foundPendingProcessing) {
+        return await foundPendingProcessing;
+      }
+      const processing = $fetch('/api/recipes/process', {
         method: 'POST',
-        body: { imageFileName: scannedRecipes.imageFileName },
+        body: { recipeId: scannedRecipe.id, imageFileName: scannedRecipe.imageFileName },
+      }).then((processedImage) => {
+        const newScannedRecipe = { ...scannedRecipe, data: processedImage };
+        recipesDB.updateRecipe(newScannedRecipe);
+        return newScannedRecipe;
       });
-      recipesDB.updateRecipe({ ...scannedRecipes, data: processedImage });
+      pendingProcessings.set(scannedRecipe.id, processing);
+      const result = await processing.finally(() => {
+        pendingProcessings.delete(scannedRecipe.id);
+      });
+      return result;
     };
     return {
       provide: {
         recipesStore: {
           uploadImage,
           processImage,
+          pendingProcessings,
           scannedRecipes: recipesDB.scannedRecipes,
           loading: recipesDB.loading,
           deleteRecipe: recipesDB.deleteRecipe,

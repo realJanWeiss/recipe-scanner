@@ -5,6 +5,7 @@ import { LMStudioClient } from '@lmstudio/sdk';
 import type { Recipe } from '~~/shared/types/recipe';
 
 const userSchema = z.object({
+  recipeId: z.string(),
   imageFileName: z.string(),
 });
 
@@ -25,8 +26,7 @@ export default defineEventHandler(async (event): Promise<Recipe> => {
     throw createError({ statusCode: 400, statusMessage: 'Invalid request body' });
   }
 
-  const recipeId = result.data.imageFileName.substring(0, result.data.imageFileName.lastIndexOf('.'));
-  const storedRecipe = await getRecipeData(recipeId);
+  const storedRecipe = await getRecipeData(result.data.recipeId);
   if (storedRecipe) return storedRecipe;
 
   const fileExists = await hasFile(result.data.imageFileName);

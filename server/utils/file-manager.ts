@@ -17,11 +17,9 @@ const isSupportedMimeType = (type: string): type is SupportedMimeType =>
 export const isImageMultiPartData = (data: MultiPartData): data is ImageMultiPartData =>
   data.type !== undefined && isSupportedMimeType(data.type);
 
-export const saveImageFile = async (file: ImageMultiPartData): Promise<string | undefined> => {
-  const extension = extensionMap[file.type];
-  const fileName = `${crypto.randomUUID()}-${extension}`;
-  const storage = useStorage('uploads');
-  await storage.setItemRaw(fileName, file.data);
+export const saveImageFile = async (id: string, file: ImageMultiPartData): Promise<string | undefined> => {
+  const fileName = id + extensionMap[file.type];
+  await useStorage('uploads').setItemRaw(fileName, file.data);
   return fileName;
 };
 

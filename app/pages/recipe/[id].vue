@@ -1,7 +1,23 @@
 <template>
   <div v-if="scannedRecipe">
-    <template v-if="scannedRecipe.data">
+    <template v-if="!scannedRecipe.data">
+      <h1>Unprocessed recipe</h1>
+      <img
+        :src="`/uploads/${scannedRecipe.imageFileName}`"
+        alt="Recipe Image"
+        style="max-width: 300px;"
+      >
+      <process-recipe-button
+        :scanned-recipe="scannedRecipe"
+      />
+    </template>
+    <template v-else>
       <h1>{{ scannedRecipe.data.name }}</h1>
+      <img
+        :src="`/uploads/${scannedRecipe.imageFileName}`"
+        alt="Recipe Image"
+        style="max-width: 300px; float: right;"
+      >
       <p v-if="scannedRecipe.data.cookTime">
         Cook time: {{ scannedRecipe.data.cookTime }}
       </p>
@@ -33,9 +49,6 @@
         </li>
       </ol>
     </template>
-    <p v-else>
-      Recipe not processed yet.
-    </p>
   </div>
   <div v-else>
     <p>Loading...</p>
@@ -46,7 +59,7 @@
 import type { ScannedRecipe } from '~~/shared/types/recipe';
 
 const route = useRoute();
-const recipeId = Number(route.params.id);
+const recipeId = route.params.id as string;
 const { $recipesStore } = useNuxtApp();
 const { data: scannedRecipe } = useAsyncData<ScannedRecipe>('recipe', () => {
   return new Promise<ScannedRecipe>((resolve) => {

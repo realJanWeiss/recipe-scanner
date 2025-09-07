@@ -12,7 +12,7 @@ export const useRecipesDB = async () => {
       request.onupgradeneeded = () => {
         const dbInstance = request.result;
         if (!dbInstance.objectStoreNames.contains('Recipe')) {
-          dbInstance.createObjectStore('Recipe', { keyPath: 'id', autoIncrement: true });
+          dbInstance.createObjectStore('Recipe', { keyPath: 'id' });
         }
       };
       request.onsuccess = () => {
@@ -35,13 +35,12 @@ export const useRecipesDB = async () => {
     });
   };
 
-  const addRecipe = async (scannedRecipe: Omit<ScannedRecipe, 'id'>): Promise<ScannedRecipe> => {
+  const addRecipe = async (scannedRecipe: ScannedRecipe): Promise<ScannedRecipe> => {
     return dbMutation((store) => {
       return new Promise((resolve, reject) => {
         const request = store.add(scannedRecipe);
-        request.onsuccess = (ev) => {
-          const id = (ev.target as IDBRequest).result as number;
-          resolve({ ...scannedRecipe, id });
+        request.onsuccess = () => {
+          resolve(scannedRecipe);
         };
         request.onerror = () => {
           reject(request.error);
@@ -60,7 +59,7 @@ export const useRecipesDB = async () => {
     });
   };
 
-  const deleteRecipe = async (id: number): Promise<void> => {
+  const deleteRecipe = async (id: string): Promise<void> => {
     return dbMutation((store) => {
       return new Promise((resolve, reject) => {
         const request = store.delete(id);
