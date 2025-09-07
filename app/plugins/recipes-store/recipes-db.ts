@@ -1,7 +1,7 @@
-import type { Recipe, StoredRecipe } from '~/types/recipe';
+import type { ScannedRecipe } from '~~/shared/types/recipe';
 
 export const useRecipesDB = async () => {
-  const recipes = ref<StoredRecipe[]>([]);
+  const scannedRecipes = ref<ScannedRecipe[]>([]);
   const loading = ref(true);
   let db: IDBDatabase | null = null;
 
@@ -30,18 +30,18 @@ export const useRecipesDB = async () => {
     const tx = dbInstance.transaction('Recipe', 'readwrite');
     const store = tx.objectStore('Recipe');
     return fn(store).then(async (result) => {
-      recipes.value = await getAllRecipes();
+      scannedRecipes.value = await getAllRecipes();
       return result;
     });
   };
 
-  const addRecipe = async (recipe: Recipe): Promise<StoredRecipe> => {
+  const addRecipe = async (scannedRecipe: Omit<ScannedRecipe, 'id'>): Promise<ScannedRecipe> => {
     return dbMutation((store) => {
       return new Promise((resolve, reject) => {
-        const request = store.add(recipe);
+        const request = store.add(scannedRecipe);
         request.onsuccess = (ev) => {
           const id = (ev.target as IDBRequest).result as number;
-          resolve({ ...recipe, id });
+          resolve({ ...scannedRecipe, id });
         };
         request.onerror = () => {
           reject(request.error);
@@ -50,10 +50,10 @@ export const useRecipesDB = async () => {
     });
   };
 
-  const updateRecipe = async (recipe: Recipe): Promise<void> => {
+  const updateRecipe = async (scannedRecipe: ScannedRecipe): Promise<void> => {
     return dbMutation((store) => {
       return new Promise((resolve, reject) => {
-        const request = store.put(recipe);
+        const request = store.put(scannedRecipe);
         request.onsuccess = () => resolve();
         request.onerror = () => reject(request.error);
       });
@@ -70,14 +70,14 @@ export const useRecipesDB = async () => {
     });
   };
 
-  const getAllRecipes = async (): Promise<StoredRecipe[]> => {
+  const getAllRecipes = async (): Promise<ScannedRecipe[]> => {
     const dbInstance = await openDB();
     return new Promise((resolve, reject) => {
       const tx = dbInstance.transaction('Recipe', 'readonly');
       const store = tx.objectStore('Recipe');
       const request = store.getAll();
       request.onsuccess = (ev) => {
-        resolve((ev.target as IDBRequest).result as StoredRecipe[]);
+        resolve((ev.target as IDBRequest).result as ScannedRecipe[]);
       };
       request.onerror = () => {
         reject(request.error);
@@ -85,14 +85,14 @@ export const useRecipesDB = async () => {
     });
   };
 
-  const _getRecipeById = async (id: number): Promise<StoredRecipe | undefined> => {
+  const _getRecipeById = async (id: number): Promise<ScannedRecipe | undefined> => {
     const dbInstance = await openDB();
     return new Promise((resolve, reject) => {
       const tx = dbInstance.transaction('Recipe', 'readonly');
       const store = tx.objectStore('Recipe');
       const request = store.get(id);
       request.onsuccess = (ev) => {
-        resolve((ev.target as IDBRequest).result as StoredRecipe | undefined);
+        resolve((ev.target as IDBRequest).result as ScannedRecipe | undefined);
       };
       request.onerror = () => {
         reject(request.error);
@@ -101,12 +101,12 @@ export const useRecipesDB = async () => {
   };
 
   await openDB();
-  recipes.value = await getAllRecipes();
+  scannedRecipes.value = await getAllRecipes();
   loading.value = false;
 
   return {
     loading,
-    storedRecipes: recipes,
+    scannedRecipes,
     addRecipe,
     updateRecipe,
     deleteRecipe,

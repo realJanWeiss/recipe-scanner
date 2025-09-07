@@ -2,15 +2,21 @@
   <div>
     <h2>Recipes List</h2>
     <client-only>
-      <ul v-if="!$recipesDB.loading.value">
+      <ul v-if="!$recipesStore.loading.value">
         <li
-          v-for="recipe in $recipesDB.storedRecipes.value"
-          :key="recipe.id"
+          v-for="scannedRecipe in $recipesStore.scannedRecipes.value"
+          :key="scannedRecipe.id"
         >
-          <nuxt-link :to="{ name: 'recipe-id', params: { id: recipe.id } }">
-            <h3>{{ recipe.name }}</h3>
+          <nuxt-link :to="{ name: 'recipe-id', params: { id: scannedRecipe.id } }">
+            <h3>{{ scannedRecipe.data?.name ?? 'Unprocessed recipe' }}</h3>
           </nuxt-link>
-          <button @click="$recipesDB.deleteRecipe(recipe.id)">
+          <button
+            v-if="!scannedRecipe.data"
+            @click="$recipesStore.processImage(scannedRecipe)"
+          >
+            process
+          </button>
+          <button @click="$recipesStore.deleteRecipe(scannedRecipe.id)">
             delete
           </button>
         </li>

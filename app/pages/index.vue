@@ -9,22 +9,10 @@
 
 <script setup lang="ts">
 const upload = async (files: FileSystemFileHandle[] | FileList) => {
-  const formData = new FormData();
-  if (files instanceof FileList) {
-    for (const file of files) {
-      formData.append('files', file);
-    }
-  }
-  else {
-    for (const fileHandle of files) {
-      await fileHandle.getFile().then((file) => {
-        formData.append('files', file);
-      });
-    }
-  }
-  await $fetch('/api/image', {
-    method: 'POST',
-    body: formData,
-  });
+  const filesToUpload: File[] = files instanceof FileList
+    ? Array.from(files)
+    : await Promise.all(files.map(fileHandle => fileHandle.getFile()));
+
+  useNuxtApp().$recipesStore.uploadImage(filesToUpload);
 };
 </script>

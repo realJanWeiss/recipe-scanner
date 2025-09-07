@@ -8,6 +8,8 @@ export interface Recipe {
   recipeInstructions: string[];
 }
 
-export interface StoredRecipe extends Recipe {
+export interface ScannedRecipe {
   id: number;
+  imageFileName: string;
+  data?: Recipe;
 }
