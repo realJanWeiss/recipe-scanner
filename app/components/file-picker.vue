@@ -7,16 +7,8 @@ const emits = defineEmits<{
 
 const debugOutput = ref<HTMLPreElement | null>(null);
 
-const onClickSingle = async () => {
-  const file = await openFilePicker();
-  if (!file) {
-    return;
-  }
-  emits('select', file);
-  debugOutput.value!.textContent += `${file[0]!.name}\n`;
-};
-const onClickMultiple = async () => {
-  const files = await openFilePicker(true);
+const onClick = async () => {
+  const files = await openFilePicker();
   if (!files) {
     return;
   }
@@ -28,10 +20,7 @@ const onClickMultiple = async () => {
 </script>
 
 <template>
-  <button @click="onClickSingle">
-    Select a file
-  </button>
-  <button @click="onClickMultiple">
+  <button @click="onClick">
     Select multiple files
   </button>
   <pre ref="debugOutput" />

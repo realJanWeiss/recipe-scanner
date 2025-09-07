@@ -1,28 +1,27 @@
 <template>
-  <div
-    ref="dropZoneRef"
-    :style="{ border: isOverDropZone ? '2px solid green' : '2px solid gray', height: '200px' }"
-  >
-    <slot />
+  <div>
+    <UFileUpload
+      v-model="value"
+      class="w-full min-h-48"
+      multiple
+      accept="image/jpeg"
+      label="Drag & drop images here, or click to select"
+    />
+    <UButton
+      v-if="value"
+      class="mt-4"
+      color="primary"
+      @click="$emit('select', value)"
+    >
+      Upload
+    </UButton>
   </div>
 </template>
 
 <script setup lang="ts">
-const emits = defineEmits<{
+defineEmits<{
   select: [File[]];
 }>();
 
-const dropZoneRef = ref<HTMLDivElement>();
-
-function onDrop(files: File[] | null) {
-  if (!Array.isArray(files) || !files.length) return;
-  emits('select', files);
-}
-
-const { isOverDropZone } = useDropZone(dropZoneRef, {
-  onDrop,
-  dataTypes: ['image/jpeg'],
-  multiple: true,
-  preventDefaultForUnhandled: false,
-});
+const value = ref<null | File[]>(null);
 </script>

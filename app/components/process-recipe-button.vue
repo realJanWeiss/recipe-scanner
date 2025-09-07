@@ -1,14 +1,11 @@
 <template>
-  <button
+  <UButton
     v-if="!$recipesStore.pendingProcessings.has(scannedRecipe.id)"
+    icon="i-mdi-cog"
     @click="$recipesStore.processImage(scannedRecipe)"
   >
     process
-  </button>
-  <loading-dots
-    v-else
-    text="Processing"
-  />
+  </UButton>
 </template>
 
 <script setup lang="ts">

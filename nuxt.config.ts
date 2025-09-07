@@ -4,8 +4,10 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/test-utils',
     '@vueuse/nuxt',
+    '@nuxt/ui',
   ],
   devtools: { enabled: true },
+  css: ['~/assets/css/main.css'],
   compatibilityDate: '2025-07-15',
   nitro: {
     storage: {
