@@ -1,75 +1,31 @@
-# Nuxt Minimal Starter
+# Recipe Scanner
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Do you also have a good amount of printed-out or hand-written recipes which you want to digitalize? You came to the right place!
+
+This tool allows you to easily turn photos of your recipes into a machine-readable format.
+
+The output format is a subset of the [schema.org Recipe](https://schema.org/Recipe) and can be expanded (merge request are welcome).
+
+## Prerequisites
+
+To run this project locally you need
+1. Node.js (or an alternative)
+2. [LM Studio](https://lmstudio.ai/) and a vision Large Language Model (e.g. `mistralai/mistral-small-3.2`)
 
 ## Setup
 
-Make sure to install dependencies:
+Install dependencies of the application
 
 ```bash
-# npm
-npm install
-
-# pnpm
 pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
+
+Start LM Studio, go to Developer tab, start server and load a model. 
 
 ## Development Server
 
 Start the development server on `http://localhost:3000`:
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
 pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
