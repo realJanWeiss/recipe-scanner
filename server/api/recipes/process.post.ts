@@ -33,7 +33,6 @@ export default defineEventHandler(async (event): Promise<Recipe> => {
   if (!fileExists) throw createError({ statusCode: 404, statusMessage: 'Image not found' });
 
   const client = new LMStudioClient();
-
   const model = await client.llm.model();
   const filePath = path.resolve('./public/uploads', result.data.imageFileName);
   const image = await client.files.prepareImage(filePath);

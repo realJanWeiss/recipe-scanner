@@ -7,7 +7,7 @@ export default defineNuxtPlugin({
 
     const pendingProcessings = reactive<Map<string, Promise<ScannedRecipe>>>(new Map());
 
-    const uploadImage = async (files: File[]): Promise<void> => {
+    const uploadImage = async (files: File[]): Promise<ScannedRecipe[]> => {
       const formData = new FormData();
       for (const file of files) {
         formData.append('files', file);
@@ -16,9 +16,12 @@ export default defineNuxtPlugin({
         method: 'POST',
         body: formData,
       });
-      for (const savedFile of savedFiles) {
-        recipesDB.addRecipe({ id: savedFile.recipeId, imageFileName: savedFile.fileName });
-      }
+      const scannedRecies = await Promise.all(
+        savedFiles.map(savedFile =>
+          recipesDB.addRecipe({ id: savedFile.recipeId, imageFileName: savedFile.fileName }),
+        ),
+      );
+      return scannedRecies;
     };
     const processImage = async (scannedRecipe: ScannedRecipe): Promise<ScannedRecipe> => {
       const foundPendingProcessing = pendingProcessings.get(scannedRecipe.id);

@@ -9,6 +9,7 @@ The output format is a subset of the [schema.org Recipe](https://schema.org/Reci
 ## Prerequisites
 
 To run this project locally you need
+
 1. Node.js (or an alternative)
 2. [LM Studio](https://lmstudio.ai/) and a vision Large Language Model (e.g. `mistralai/mistral-small-3.2`)
 
@@ -20,7 +21,7 @@ Install dependencies of the application
 pnpm install
 ```
 
-Start LM Studio, go to Developer tab, start server and load a model. 
+Start LM Studio, go to Developer tab, start server and load a model.
 
 ## Development Server
 

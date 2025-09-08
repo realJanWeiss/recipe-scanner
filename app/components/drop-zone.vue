@@ -24,4 +24,10 @@ defineEmits<{
 }>();
 
 const value = ref<null | File[]>(null);
+
+defineExpose({
+  clear: () => {
+    value.value = null;
+  },
+});
 </script>

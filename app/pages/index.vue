@@ -7,6 +7,7 @@
       Digitalize your printed-out or hand-written recipes.
     </p>
     <drop-zone
+      ref="dropZoneRef"
       class="mb-8"
       @select="upload"
     />
@@ -15,7 +16,15 @@
 </template>
 
 <script setup lang="ts">
+import type DropZone from '../components/drop-zone.vue';
+
+const dropZoneRef = ref<InstanceType<typeof DropZone> | null>(null);
 const upload = async (files: File[]) => {
-  useNuxtApp().$recipesStore.uploadImage(files);
+  const { $recipesStore } = useNuxtApp();
+  const scannedImages = await $recipesStore.uploadImage(files);
+  dropZoneRef.value?.clear();
+  for (const scannedImage of scannedImages) {
+    $recipesStore.processImage(scannedImage);
+  }
 };
 </script>
