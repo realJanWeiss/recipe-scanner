@@ -10,11 +10,11 @@
       />
     </template>
     <template v-else>
-      <h1 class="text-3xl font-bold mb-4">
+      <h1>
         {{ scannedRecipe.data.name }}
       </h1>
       <recipe-image
-        class="max-w-80"
+        class="max-w-80 mb-2"
         :scanned-recipe="scannedRecipe"
       />
       <p v-if="scannedRecipe.data.cookTime">

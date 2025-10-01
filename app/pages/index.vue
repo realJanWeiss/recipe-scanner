@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold mb-2">
+    <h1>
       Recipe Scanner
     </h1>
     <p class="mb-4">

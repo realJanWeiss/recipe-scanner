@@ -4,7 +4,10 @@
       <h2 class="text-2xl font-bold mb-4">
         Recipes List
       </h2>
-      <UPageGrid as="ul">
+      <UPageGrid
+        as="ul"
+        class="items-start"
+      >
         <recipe-list-item
           v-for="scannedRecipe in $recipesStore.scannedRecipes.value"
           :key="scannedRecipe.id"
